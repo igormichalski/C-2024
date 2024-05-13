@@ -71,6 +71,10 @@ void removerFIM(No **lista){
     free(aux->proximo);
     aux->proximo = NULL;
 
+    if (aux == *lista) {
+        (*lista)->proximo = NULL;
+    }
+    
 }
 
 
