@@ -91,8 +91,7 @@ void inserir(No **lista, int index, int valor){
     }
 
     if(index == 0){
-        novo->proximo = *lista;
-        *lista = novo;
+        inserirINICIO(&(*lista), valor);
         return;
     }
 
@@ -118,8 +117,7 @@ void remover(No **lista, int index){
     }
 
     if(index == 0){
-        (*lista) = (*lista)->proximo;
-        free(aux);
+        removerINICIO(&(*lista);
         return;
     }
 
