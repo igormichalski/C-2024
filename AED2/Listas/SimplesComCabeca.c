@@ -107,7 +107,7 @@ void remover(No **lista, int index){
     }
 
     int i=0;
-    while (i != index-1){
+    while (i != index){
         aux = aux->proximo;
         i++;
     }
