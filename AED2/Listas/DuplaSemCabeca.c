@@ -100,11 +100,7 @@ void inserir(No **lista, int index, int valor){
     }
 
     if(index == 0){
-        novo->proximo = *lista;
-        novo->anterior = NULL;
-        if(*lista != NULL)
-            (*lista)->anterior = novo;
-        *lista = novo;
+        inserirINICIO(&(*lista), valor);
         return;
     }
 
@@ -136,11 +132,7 @@ void remover(No **lista, int index){
     }
 
     if(index == 0){
-        (*lista) = (*lista)->proximo;
-        if (*lista != NULL) {
-            (*lista)->anterior = NULL;
-        }
-        free(aux);
+        removerINICIO(&(*lista));
         return;
     }
 
