@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//ESTRUTURA QUE UTILIZAMOSO
+// ESTRUTURA QUE UTILIZAMOS
 typedef struct no{
     int dado;
     struct no *proximo;
 }No;
 
-//IMPLEMENTADO PARA O INICIO
+// IMPLEMENTADO PARA O INICIO
 void inserirINICIO(No **lista, int valor){
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
@@ -25,8 +25,7 @@ void removerINICIO(No **lista){
     }
 }
 
-
-//IMPLEMENTADO PARA O FIM
+// IMPLEMENTADO PARA O FIM
 void inserirFIM(No **lista, int valor){
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
@@ -65,11 +64,9 @@ void removerFIM(No **lista){
 
     free(aux->proximo);
     aux->proximo = NULL;
-
 }
 
-
-//Procedimentos de Ambos
+// Procedimentos de Ambos
 int TamLista(No *lista){
     int tamanho = 0;
     while(lista != NULL){
@@ -107,17 +104,16 @@ void inserir(No **lista, int index, int valor){
 void remover(No **lista, int index){
     No *aux = *lista;
 
-    //Pegando o tamanho da lista
+    // Pegando o tamanho da lista
     int tamanho = TamLista(aux);
-    printf("remover %d\n", tamanho);
 
-    if(index < 0 || index >= tamanho){
+    if(index < 0 || tamanho == 0 || index >= tamanho){
         printf("Impossivel remover\n");
         return;
     }
 
     if(index == 0){
-        removerINICIO(&(*lista);
+        removerINICIO(&(*lista));
         return;
     }
 
@@ -129,9 +125,7 @@ void remover(No **lista, int index){
     No *temp = aux->proximo;
     aux->proximo = aux->proximo->proximo;
     free(temp);
-
 }
-
 
 void imprimir(No *lista){
     while(lista != NULL){
@@ -140,29 +134,20 @@ void imprimir(No *lista){
     }
 }
 
-
 int main() {
-
-    //Criando No cabeça
+    // Criando lista sem nó cabeça
     No *Lista = NULL;
 
-   inserirFIM(&Lista, 12);
-   inserirFIM(&Lista, 129);
-   // inserirFIM(&Lista, 969);
+    inserirFIM(&Lista, 12);
+    inserirFIM(&Lista, 129);
 
-    //inserir(&Lista, 0,54);
-    //inserir(&Lista, 1,96);
-    //inserir(&Lista, 1,26);
+    inserir(&Lista, 0, 54);
+    inserir(&Lista, 1, 96);
+    inserir(&Lista, 1, 26);
 
-    //removerFIM(&Lista);
+    removerFIM(&Lista);
 
-    remover(&Lista, 0);
-
-
-    //Imprimindo
     imprimir(Lista);
 
-
     return 0;
-
 }
