@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//ESTRUTURA QUE UTILIZAMOSO
+// ESTRUTURA QUE UTILIZAMOS
 typedef struct no{
     int dado;
     struct no *proximo;
 }No;
 
-
-
-//IMPLEMENTADO PARA O INICIO
+// IMPLEMENTADO PARA O INICIO
 void inserirINICIO(No **lista, int valor){
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
-    novo->proximo = (*lista)->proximo; //converte ele com os parenteses primeiro
+    novo->proximo = (*lista)->proximo; // converte ele com os parenteses primeiro
     (*lista)->proximo = novo;
 }
 
@@ -27,15 +25,14 @@ void removerINICIO(No **lista){
     }
 }
 
-
-//IMPLEMENTADO PARA O FIM
+// IMPLEMENTADO PARA O FIM
 void inserirFIM(No **lista, int valor){
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
     novo->proximo = NULL;
 
     No *aux = *lista;
-    while (aux->proximo!=NULL){
+    while (aux->proximo != NULL){
         aux = aux->proximo;
     }
 
@@ -52,25 +49,23 @@ void removerFIM(No **lista){
     }
 
     // Lista com um elemento
-    if (aux->proximo == NULL) {
+    if (aux->proximo->proximo == NULL) {
         free(aux->proximo);
         aux->proximo = NULL;
         return;
     }
 
-    while (aux->proximo->proximo !=NULL){
+    while (aux->proximo->proximo != NULL){
         aux = aux->proximo;
     }
 
     free(aux->proximo);
     aux->proximo = NULL;
-
 }
 
-
-//Procedimentos de Ambos
+// Procedimentos de Ambos
 int TamLista(No *lista){
-    int tamanho = -1;
+    int tamanho = 0;
     while(lista != NULL){
         tamanho++;
         lista = lista->proximo;
@@ -82,9 +77,9 @@ void inserir(No **Lista, int index, int valor){
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
 
-    int tamanho = TamLista((*Lista));
+    int tamanho = TamLista(*Lista);
 
-    if(index <= 0 || index>tamanho){
+    if(index < 0 || index > tamanho){
         printf("Impossivel adicionar nessa posicao\n");
         return;
     }
@@ -98,16 +93,15 @@ void inserir(No **Lista, int index, int valor){
 
     novo->proximo = aux->proximo;
     aux->proximo = novo;
-
 }
 
 void remover(No **lista, int index){
     No *aux = *lista;
 
-    //Pegando o tamanho da lista
+    // Pegando o tamanho da lista
     int tamanho = TamLista(aux);
 
-    if(index <= 0 || tamanho == 0 || index>tamanho){
+    if(index < 0 || tamanho == 0 || index >= tamanho){
         printf("Impossivel remover\n");
         return;
     }
@@ -120,9 +114,7 @@ void remover(No **lista, int index){
     No *temp = aux->proximo;
     aux->proximo = aux->proximo->proximo;
     free(temp);
-
 }
-
 
 void imprimir(No *lista){
     while(lista != NULL){
@@ -131,20 +123,14 @@ void imprimir(No *lista){
     }
 }
 
-
 int main() {
-
-    //Criando No cabeça
+    // Criando No cabeça
     No *cabeca = (No*) malloc(sizeof(No));
     cabeca->proximo = NULL;
-
 
     inserirFIM(&cabeca, 12);
     inserirFIM(&cabeca, 23);
     inserirFIM(&cabeca, 129);
-    //removerINICIO(&cabeca);
-    //removerINICIO(&cabeca);
-    //removerFIM(&cabeca);
 
     inserir(&cabeca, 2, 486);
     inserir(&cabeca, 4, 4786);
@@ -152,11 +138,8 @@ int main() {
 
     remover(&cabeca, 2);
 
-    //Imprimindo
+    // Imprimindo
     imprimir(cabeca);
-    imprimir(cabeca);
-
 
     return 0;
-
 }
