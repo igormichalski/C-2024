@@ -65,7 +65,7 @@ void removerFIM(No **lista){
 
 // Procedimentos de Ambos
 int TamLista(No *lista){
-    int tamanho = 0;
+    int tamanho = -1;
     while(lista != NULL){
         tamanho++;
         lista = lista->proximo;
@@ -86,7 +86,7 @@ void inserir(No **Lista, int index, int valor){
 
     int i = 0;
     No *aux = *Lista;
-    while(i != index-1){
+    while(i != index){
         aux = aux->proximo;
         i++;
     }
@@ -128,15 +128,12 @@ int main() {
     No *cabeca = (No*) malloc(sizeof(No));
     cabeca->proximo = NULL;
 
-    inserirFIM(&cabeca, 12);
-    inserirFIM(&cabeca, 23);
-    inserirFIM(&cabeca, 129);
 
-    inserir(&cabeca, 2, 486);
-    inserir(&cabeca, 4, 4786);
-    inserir(&cabeca, 5, 955);
+    inserir(&cabeca, 0, 486);
+    //inserir(&cabeca, 0, 4786);
+    //inserir(&cabeca, 5, 955);
 
-    remover(&cabeca, 2);
+    //remover(&cabeca, 2);
 
     // Imprimindo
     imprimir(cabeca);
