@@ -45,25 +45,44 @@ void inserirCircular(No **cabeca, int dado) {
     }
 }
 
-void removerCircular(No **cabeca) {
+void removerCircular(No **cabeca, int x) {
     if (*cabeca == NULL) {
         printf("Lista vazia\n");
         return;
     }
-    No *ultimo = *cabeca;
-    while (ultimo->proximo != *cabeca) {
-        ultimo = ultimo->proximo;
+
+    No *atual = *cabeca;
+    No *anterior = NULL;
+
+    // Procurar o valor na lista
+    while (atual->proximo != *cabeca && atual->dado != x) {
+        anterior = atual;
+        atual = atual->proximo;
     }
-    No *aux = *cabeca;
-    if (ultimo == *cabeca) {
-        // A lista só tem um nó
+
+    // Verificar se o valor foi encontrado
+    if (atual->dado != x) {
+        printf("Valor %d nao encontrado na lista\n", x);
+        return;
+    }
+
+    // Se o nó a ser removido é o único na lista
+    if (atual == *cabeca && atual->proximo == *cabeca) {
         *cabeca = NULL;
-    } else {
+    } else if (atual == *cabeca) { // Se o nó a ser removido é o primeiro na lista
+        No *ultimo = *cabeca;
+        while (ultimo->proximo != *cabeca) {
+            ultimo = ultimo->proximo;
+        }
         *cabeca = (*cabeca)->proximo;
         ultimo->proximo = *cabeca;
+    } else { // Se o nó a ser removido está no meio da lista
+        anterior->proximo = atual->proximo;
     }
-    free(aux);
+
+    free(atual);
 }
+
 
 No* buscarCircular(No *cabeca, int numero) {
     if (cabeca == NULL) {
@@ -97,13 +116,30 @@ void inserirSimples(No** lista, int valor) {
     }
 }
 
-void removerSimples(No **lista){
+void removerSimples(No **lista, int valor){
     if((*lista) != NULL){
-        No *aux = (*lista);
-        (*lista) = aux->proximo;
-        free(aux);
+        No *atual = (*lista);
+        No *anterior = NULL;
+        
+        while(atual != NULL && atual->dado != valor){
+            anterior = atual;
+            atual = atual->proximo;
+        }
+
+        if(atual == NULL){
+            printf("Valor %d nao encontrado na lista\n", valor);
+            return;
+        }
+
+        if(anterior == NULL){
+            (*lista) = atual->proximo;
+        }else{
+            anterior->proximo = atual->proximo;
+        }
+
+        free(atual);
     }else{
-        printf("Lista já esta vazia\n");
+        printf("Lista já está vazia\n");
         sleep(1);
     }
 }
@@ -133,19 +169,30 @@ void inserirDuplamente(NoDuplo **lista, int valor){
     novo->anterior = (*lista);
 }
 
-void removerDuplamente(NoDuplo **lista){
-    if((*lista)->proximo != NULL){
-        NoDuplo *aux = (*lista)->proximo;
-        (*lista)->proximo = aux->proximo;
-        if(aux->proximo != NULL){
-            aux->proximo->anterior = aux;
+void removerDuplamente(NoDuplo **lista, int valor) {
+    if ((*lista)->proximo != NULL) {
+        NoDuplo *atual = (*lista)->proximo;
+        while (atual != NULL && atual->dado != valor) {
+            atual = atual->proximo;
         }
-        free(aux);
-    }else{
-        printf("Lista já esta vazia\n");
+        if (atual != NULL) {
+            if (atual->anterior != NULL) {
+                atual->anterior->proximo = atual->proximo;
+            }
+            if (atual->proximo != NULL) {
+                atual->proximo->anterior = atual->anterior;
+            }
+            free(atual);
+        } else {
+            printf("Valor nao encontrado na lista\n");
+            sleep(1);
+        }
+    } else {
+        printf("Lista ja esta vazia\n");
         sleep(1);
     }
 }
+
 
 NoDuplo* buscarDuplamente(NoDuplo *cabeca, int numero) {
     NoDuplo* atual = cabeca->proximo; 
@@ -489,7 +536,7 @@ int main() {
     int x = 0;
 
     while(menu != -1){
-        printf("(1) Fila \n(2) Pilha \n(3) Lista Duplamente C/Cabeca \n(4) Lista Simples S/Cabeca \n(5)Lista Circular \n(-1) Sair\n");
+        printf("(1) Fila \n(2) Pilha \n(3) Lista Duplamente C/Cabeca \n(4) Lista Simples S/Cabeca \n(5) Lista Circular \n(-1) Sair\n");
         scanf("%d", &menu);
 
         switch (menu){
@@ -504,7 +551,6 @@ int main() {
                 system("clear");
                 if(menuFila == 1){
                 
-                    int x;
                     printf("Inserir \nQual valor deseja inserir: \n");
                     scanf("%d", &x);
                     entrarNaFila(&comecoFila, x);
@@ -530,7 +576,6 @@ int main() {
                 system("clear");
                 if(menuPilha == 1){
                 
-                    int x;
                     printf("Inserir \nQual valor deseja inserir: \n");
                     scanf("%d", &x);
                     empilhar(&comecoPilha, x);
@@ -556,7 +601,6 @@ int main() {
                 system("clear");
                 if(menuDuplo == 1){
                 
-                    int x;
                     printf("Inserir \nQual valor deseja inserir: \n");
                     scanf("%d", &x);
                     inserirDuplamente(&cabecaDuploEncadeada, x);                
@@ -564,8 +608,9 @@ int main() {
 
                 if(menuDuplo == 2){
                     printf("Removendo\n");
-                    sleep(2);
-            	    removerDuplamente(&cabecaDuploEncadeada);
+                    printf("Qual valor deseja remover? \n");
+                    scanf("%d", &x);
+            	    removerDuplamente(&cabecaDuploEncadeada, x);
                 }   
 
                 if(menuDuplo == 3){
@@ -593,7 +638,6 @@ int main() {
                 system("clear");
                 if(menuSimples == 1){
                 
-                    int x;
                     printf("Inserir \nQual valor deseja inserir: \n");
                     scanf("%d", &x);
                     inserirSimples(&comecoSimples, x);                
@@ -601,8 +645,9 @@ int main() {
 
                 if(menuSimples == 2){
                     printf("Removendo\n");
-                    sleep(2);
-            	    removerSimples(&comecoSimples);
+                    printf("Qual valor deseja remover? \n");
+                    scanf("%d", &x);
+            	    removerSimples(&comecoSimples, x);
                 }   
 
                 if(menuSimples == 3){
@@ -630,16 +675,16 @@ int main() {
                 system("clear");
                 if(menuCircular == 1){
                 
-                    int x;
-                    printf("Inserir \nQual valor deseja inserir: \n");
+                    printf("Qual valor deseja inserir: \n");
                     scanf("%d", &x);
                     inserirCircular(&comecoCircular, x);                
                 }
 
                 if(menuCircular == 2){
                     printf("Removendo\n");
-                    sleep(2);
-            	    removerCircular(&comecoCircular);
+                    printf("Qual valor deseja remover: \n");
+                    scanf("%d", &x);
+            	    removerCircular(&comecoCircular, x);
                 }   
 
                 if(menuCircular == 3){
