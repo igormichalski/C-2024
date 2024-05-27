@@ -26,7 +26,7 @@ void inserirCircular(No **cabeca, int dado) {
         novo->proximo = novo; // Lista vazia, aponta para si mesmo
         *cabeca = novo;
     } else if (dado <= (*cabeca)->dado) {
-        // Inserção no início da lista
+        //Inserção no início da lista
         No *ultimo = *cabeca;
         while (ultimo->proximo != *cabeca) {
             ultimo = ultimo->proximo;
@@ -35,7 +35,7 @@ void inserirCircular(No **cabeca, int dado) {
         *cabeca = novo;
         ultimo->proximo = novo;
     } else {
-        // Inserção no meio ou no final da lista
+        //Inserção no meio ou no final da lista
         No *atual = *cabeca;
         while (atual->proximo != *cabeca && atual->proximo->dado < dado) {
             atual = atual->proximo;
@@ -54,37 +54,36 @@ void removerCircular(No **cabeca, int x) {
     No *atual = *cabeca;
     No *anterior = NULL;
 
-    // Procurar o valor na lista
+    //Procurar o valor na lista
     while (atual->proximo != *cabeca && atual->dado != x) {
         anterior = atual;
         atual = atual->proximo;
     }
 
-    // Verificar se o valor foi encontrado
+    //Verificar se o valor foi encontrado
     if (atual->dado != x) {
         printf("Valor %d nao encontrado na lista\n", x);
         return;
     }
 
-    // Se o nó a ser removido é o único na lista
+    //Verifica se o no que vamos remover é o unico da lista
     if (atual == *cabeca && atual->proximo == *cabeca) {
         *cabeca = NULL;
-    } else if (atual == *cabeca) { // Se o nó a ser removido é o primeiro na lista
+    } else if (atual == *cabeca) { //Verifica se é o primeiro
         No *ultimo = *cabeca;
         while (ultimo->proximo != *cabeca) {
             ultimo = ultimo->proximo;
         }
         *cabeca = (*cabeca)->proximo;
         ultimo->proximo = *cabeca;
-    } else { // Se o nó a ser removido está no meio da lista
+    } else { //Se esta em outro local
         anterior->proximo = atual->proximo;
     }
 
     free(atual);
 }
 
-
-No* buscarCircular(No *cabeca, int numero) {
+No *buscarCircular(No *cabeca, int numero) {
     if (cabeca == NULL) {
         return NULL;
     }
@@ -98,8 +97,9 @@ No* buscarCircular(No *cabeca, int numero) {
     return NULL;
 }
 
+
 //Simples Encadeado sem No cabeça
-void inserirSimples(No** lista, int valor) {
+void inserirSimples(No **lista, int valor) {
     No *novo = (No*) malloc(sizeof(No));
     novo->dado = valor;
 
@@ -144,7 +144,7 @@ void removerSimples(No **lista, int valor){
     }
 }
 
-No* buscarSimples(No *lista, int numero){
+No *buscarSimples(No *lista, int numero){
     while (lista != NULL) {
         if (lista->dado == numero) {
             return lista; 
@@ -193,8 +193,7 @@ void removerDuplamente(NoDuplo **lista, int valor) {
     }
 }
 
-
-NoDuplo* buscarDuplamente(NoDuplo *cabeca, int numero) {
+NoDuplo *buscarDuplamente(NoDuplo *cabeca, int numero) {
     NoDuplo* atual = cabeca->proximo; 
     while (atual != NULL) {
         if (atual->dado == numero) {
@@ -204,6 +203,7 @@ NoDuplo* buscarDuplamente(NoDuplo *cabeca, int numero) {
     }
     return NULL; 
 }
+
 
 //Pilha
 void empilhar(No **topo, int valor){
@@ -265,6 +265,7 @@ void sairDaFila(No **Fila) {
     }
 }
 
+
 //Desenhos
 
 //Circular
@@ -273,65 +274,68 @@ void desenharCircular(No *cabeca, No *busca) {
     gfx_set_color(255, 255, 255);
     
     if (cabeca == NULL) {
-        gfx_text(50, 100, "Lista Vazia");
+        gfx_texto(50, 100, "Lista Vazia");
         gfx_paint();
         return;
     }
     
-    int x = 50, y = 100; // Posição de início
-    int nodeWidth = 50, nodeHeight = 30; // Tamanho do nó
-    int spacing = 20; // Espaçamento entre nós
-    int linhaVertical = 50; // Distância para a linha vertical
+    int posicaoX = 50, posicaoY = 100; //Posição primeiro No
+    int larguraNo = 50, alturaNo = 30; //Tamanho do No
+    int espaco = 20; //Espaço entres os Nos
+    int linhaVertical = 50; //Distancia para desenhar linha novamente
     No *atual = cabeca;
 
-    // Desenhar a lista circular em linha reta
     do {
-        // Desenhar o nó
-        if (atual == busca) {
+        //Desenha o No
+        if (atual == busca) { //Essa verificação é para reutilizarmos a função quando formos realizar a busca e deixar o numero pintado de verde
             gfx_set_color(0, 100, 0);
         } else {
             gfx_set_color(255, 255, 255);
         }
-        gfx_rectangle(x, y, x + nodeWidth, y + nodeHeight);
+        gfx_retangulo(posicaoX, posicaoY, posicaoX + larguraNo, posicaoY + alturaNo);
         char valor[10];
-        sprintf(valor, "%d", atual->dado);
-        gfx_text(x + 15, y + 10, valor);
+        sprintf(valor, "%d", atual->dado); //Converte inteiro para string
+        gfx_texto(posicaoX + 15, posicaoY + 10, valor);
 
-        // Desenhar a seta para o próximo nó
+        //Seta para o próximo No
         gfx_set_color(255, 255, 255);
-        int arrowStartX = x + nodeWidth;
-        int arrowStartY = y + nodeHeight / 2;
+        int setaInicioX = posicaoX + larguraNo;
+        int setaInicioY = posicaoY + alturaNo / 2;
         if (atual->proximo != cabeca) {
-            int arrowEndX = arrowStartX + spacing;
-            gfx_line(arrowStartX, arrowStartY, arrowEndX, arrowStartY);
-            gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY - 5);
-            gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY + 5);
+            int setaFimX = setaInicioX + espaco;
+            
+            //Desenha a linha
+            gfx_linha(setaInicioX, setaInicioY, setaFimX, setaInicioY);
+            
+            //Desenha seta
+            gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY - 5);
+            gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY + 5);
         } else {
-            // Desenhar a seta do último nó para o primeiro nó
-            int firstNodeX = 50; // Posição x do primeiro nó
-            int firstNodeY = 100; // Posição y do primeiro nó
-            int arrowEndX = firstNodeX - spacing;
-            int arrowEndY = firstNodeY + linhaVertical;
+            //Seta do último No para o primeiro No
+            int primeiroNoX = 50; //Posição x do primeiro No
+            int primeiroNoY = 100; //Posição y do primeiro No
+            int setaFimX = primeiroNoX - espaco;
+            int setaFimY = primeiroNoY + linhaVertical;
 
-            // Linha vertical para baixo
-            gfx_line(arrowStartX, arrowStartY, arrowStartX, arrowEndY);
-            // Linha horizontal para a esquerda
-            gfx_line(arrowStartX, arrowEndY, arrowEndX, arrowEndY);
-            // Linha vertical para cima
-            gfx_line(arrowEndX, arrowEndY, arrowEndX, firstNodeY + nodeHeight / 2);
+            //Linha vertical para baixo
+            gfx_linha(setaInicioX, setaInicioY, setaInicioX, setaFimY);
+            
+            //Linha horizontal para a esquerda
+            gfx_linha(setaInicioX, setaFimY, setaFimX, setaFimY);
+
+            //Linha vertical para cima
+            gfx_linha(setaFimX, setaFimY, setaFimX, primeiroNoY + alturaNo / 2);
     
-            // Linha para direita
-            gfx_line(arrowEndX, arrowStartY, firstNodeX, arrowStartY);
+            //Linha para direita
+            gfx_linha(setaFimX, setaInicioY, primeiroNoX, setaInicioY);
 
-            // Desenhar a ponta da seta encostada no primeiro nó
-            gfx_line(firstNodeX, firstNodeY + nodeHeight / 2, firstNodeX - 5, firstNodeY + nodeHeight / 2 - 5);
-            gfx_line(firstNodeX, firstNodeY + nodeHeight / 2, firstNodeX - 5, firstNodeY + nodeHeight / 2 + 5);
-
-
+            //Desenhaa a ponta da seta encostada no primeiro nó
+            gfx_linha(primeiroNoX, primeiroNoY + alturaNo / 2, primeiroNoX - 5, primeiroNoY + alturaNo / 2 - 5);
+            gfx_linha(primeiroNoX, primeiroNoY + alturaNo / 2, primeiroNoX - 5, primeiroNoY + alturaNo / 2 + 5);
         }
 
-        // Avançar para o próximo nó
-        x += nodeWidth + spacing;
+        //Vai para o próximo No
+        posicaoX += larguraNo + espaco;
         atual = atual->proximo;
     } while (atual != cabeca);
 
@@ -339,39 +343,39 @@ void desenharCircular(No *cabeca, No *busca) {
 }
 
 //Simplismente Encadeada
-void desenharSimples(No *lista, No *Busca){
+void desenharSimples(No *lista, No *busca) {
     gfx_clear();
-    gfx_set_color(255,255,255);
-    int x = 50, y = 100; //Posição de inicio
-    int nodeWidth = 50, nodeHeight = 30; //tamanho NO
-    int spacing = 20; //Tamanho Reta
+    gfx_set_color(255, 255, 255);
+    int posicaoX = 50, posicaoY = 100; //Posição de inicio
+    int larguraNo = 50, alturaNo = 30; //tamanho NO
+    int espaco = 20; //Tamanho Reta
 
     if (lista == NULL) {
-        gfx_text(x, y, "Lista Vazia");
-     }else{
+        gfx_texto(posicaoX, posicaoY, "Lista Vazia");
+    } else {
         while (lista != NULL) {
             //Desenha o No
-            if(lista == Busca){
-                gfx_set_color(0,100,0);
+            if (lista == busca) {
+                gfx_set_color(0, 100, 0);
             }
-            gfx_rectangle(x, y, x + nodeWidth, y + nodeHeight);
+            gfx_retangulo(posicaoX, posicaoY, posicaoX + larguraNo, posicaoY + alturaNo);
             char valor[10];
             sprintf(valor, "%d", lista->dado);
-            gfx_text(x + 15, y + 10, valor);
+            gfx_texto(posicaoX + 15, posicaoY + 10, valor);
 
             //Desenha a seta para o proximo No
-            gfx_set_color(255,255,255);
+            gfx_set_color(255, 255, 255);
             if (lista->proximo != NULL) {
-                int arrowStartX = x + nodeWidth;
-                int arrowStartY = y + nodeHeight / 2;
-                int arrowEndX = arrowStartX + spacing;
-                gfx_line(arrowStartX, arrowStartY, arrowEndX, arrowStartY);
-                gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY - 5);
-                gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY + 5);
+                int setaInicioX = posicaoX + larguraNo;
+                int setaInicioY = posicaoY + alturaNo / 2;
+                int setaFimX = setaInicioX + espaco;
+                gfx_linha(setaInicioX, setaInicioY, setaFimX, setaInicioY);
+                gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY - 5);
+                gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY + 5);
             }
 
-            //Anda com o desenho
-            x += nodeWidth + spacing;
+            //Anda com o desenho (Proximo No)
+            posicaoX += larguraNo + espaco;
             lista = lista->proximo;
         }
     }
@@ -383,20 +387,20 @@ void desenharSimples(No *lista, No *Busca){
 void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
     gfx_clear();
     gfx_set_color(255,255,255);
-    int x = 50, y = 100; // Posição inicial
-    int nodeWidth = 50, nodeHeight = 30; // Tamanho do nó
-    int spacing = 20; // Espaçamento entre nós
+    int x = 50, y = 100; //Posição inicial
+    int nodeWidth = 50, nodeHeight = 30; //Tamanho do No
+    int spacing = 20; //Espacamento entre nós
 
-    // Desenha o nó cabeça
+    //Desenha o No cabeça
     gfx_rectangle(x, y, x + nodeWidth, y + nodeHeight);
     gfx_text(x + 15, y + 10, "////");
 
     if (cabeca == NULL || cabeca->proximo == NULL) {
         gfx_text(x + nodeWidth + spacing, y, "Lista Vazia");
     } else {
-        NoDuplo *atual = cabeca->proximo; // Começa após o nó cabeça
+        NoDuplo *atual = cabeca->proximo; //Comeca apos o no cabeca
 
-        // Desenha a seta do nó cabeça para o primeiro nó
+        //Desenha a seta do No cabeça para o primeiro no
         int arrowStartX = x + nodeWidth;
         int arrowStartY = y + nodeHeight / 2;
         int arrowEndX = arrowStartX + spacing;
@@ -404,10 +408,10 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
         gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY - 5);
         gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY + 5);
 
-        x += nodeWidth + spacing; // Move a posição inicial após o nó cabeça
+        x += nodeWidth + spacing; //Move a posição inicial para afrente do no cabeça
 
         while (atual != NULL) {
-            // Desenha o nó
+            //Desenha o No
             if(atual == Busca){
                 gfx_set_color(0,100,0);
             }
@@ -416,7 +420,7 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
             sprintf(valor, "%d", atual->dado);
             gfx_text(x + 15, y + 10, valor);
 
-            // Desenha a seta para o próximo nó
+            //Desenha a seta para o proximo
             gfx_set_color(255,255,255);
             if (atual->proximo != NULL) {
                 arrowStartX = x + nodeWidth;
@@ -427,7 +431,7 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
                 gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY + 5);
             }
 
-            // Desenha a seta para o nó anterior
+            //Desenha a seta para o No anterior
             if (atual != cabeca) {
                 arrowStartX = x;
                 arrowStartY = y + nodeHeight / 2;
@@ -437,7 +441,7 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
                 gfx_line(arrowEndX, arrowStartY, arrowEndX + 5, arrowStartY + 5);
             }
 
-            // Anda com o desenho
+            //Anda com o desenho
             x += nodeWidth + spacing;
             atual = atual->proximo;
         }
@@ -447,35 +451,35 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
 }
 
 //Fila
-void desenharFila(No *Fila) {
+void desenharFila(No *fila) {
     gfx_clear();
-    int x = 50, y = 100; //Posição de inicio
-    int nodeWidth = 50, nodeHeight = 30; //tamanho NO
-    int spacing = 20; //Tamanho Reta
+    int posicaoX = 50, posicaoY = 100; //Posição de inicio
+    int larguraNo = 50, alturaNo = 30; //tamanho NO
+    int espaco = 20; //Tamanho Reta
 
-    if (Fila == NULL) {
-        gfx_text(x, y, "Fila Vazia");
-     }else{
-        while (Fila != NULL) {
+    if (fila == NULL) {
+        gfx_texto(posicaoX, posicaoY, "Fila Vazia");
+    } else {
+        while (fila != NULL) {
             //Desenha o No
-            gfx_rectangle(x, y, x + nodeWidth, y + nodeHeight);
+            gfx_retangulo(posicaoX, posicaoY, posicaoX + larguraNo, posicaoY + alturaNo);
             char valor[10];
-            sprintf(valor, "%d", Fila->dado);
-            gfx_text(x + 15, y + 10, valor);
+            sprintf(valor, "%d", fila->dado);
+            gfx_texto(posicaoX + 15, posicaoY + 10, valor);
 
             //Desenha a seta para o proximo No
-            if (Fila->proximo != NULL) {
-                int arrowStartX = x + nodeWidth;
-                int arrowStartY = y + nodeHeight / 2;
-                int arrowEndX = arrowStartX + spacing;
-                gfx_line(arrowStartX, arrowStartY, arrowEndX, arrowStartY);
-                gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY - 5);
-                gfx_line(arrowEndX, arrowStartY, arrowEndX - 5, arrowStartY + 5);
+            if (fila->proximo != NULL) {
+                int setaInicioX = posicaoX + larguraNo;
+                int setaInicioY = posicaoY + alturaNo / 2;
+                int setaFimX = setaInicioX + espaco;
+                gfx_linha(setaInicioX, setaInicioY, setaFimX, setaInicioY);
+                gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY - 5);
+                gfx_linha(setaFimX, setaInicioY, setaFimX - 5, setaInicioY + 5);
             }
 
             //Anda com o desenho
-            x += nodeWidth + spacing;
-            Fila = Fila->proximo;
+            posicaoX += larguraNo + espaco;
+            fila = fila->proximo;
         }
     }
 
@@ -485,32 +489,32 @@ void desenharFila(No *Fila) {
 //Pilha
 void desenharPilha(No *topo) {
     gfx_clear();
-    int x = 50, y = 50; // Posição inicial
-    int nodeWidth = 50, nodeHeight = 30; // Tamanho do nó
-    int spacing = 20; // Espaçamento entre nós
+    int posicaoX = 50, posicaoY = 50; //Posição inicial
+    int larguraNo = 50, alturaNo = 30; //Tamanho do no
+    int espaco = 20; // Espaçamento
 
-     if (topo == NULL) {
-        gfx_text(x, y, "Pilha Vazia");
-     }else{
+    if (topo == NULL) {
+        gfx_texto(posicaoX, posicaoY, "Pilha Vazia");
+    } else {
         while (topo != NULL) {
-            // Desenha o nó
-            gfx_rectangle(x, y, x + nodeWidth, y + nodeHeight);
+            //Desenha o no
+            gfx_retangulo(posicaoX, posicaoY, posicaoX + larguraNo, posicaoY + alturaNo);
             char valor[10];
             sprintf(valor, "%d", topo->dado);
-            gfx_text(x + 15, y + 10, valor);
+            gfx_texto(posicaoX + 15, posicaoY + 10, valor);
 
-            // Desenha a seta para o próximo nó
+            //Desenha a seta para o proximo
             if (topo->proximo != NULL) {
-                int arrowStartX = x + nodeWidth / 2;
-                int arrowStartY = y + nodeHeight;
-                int arrowEndY = arrowStartY + spacing;
-                gfx_line(arrowStartX, arrowStartY, arrowStartX, arrowEndY);
-                gfx_line(arrowStartX, arrowEndY, arrowStartX - 5, arrowEndY - 5);
-                gfx_line(arrowStartX, arrowEndY, arrowStartX + 5, arrowEndY - 5);
+                int setaInicioX = posicaoX + larguraNo / 2;
+                int setaInicioY = posicaoY + alturaNo;
+                int setaFimY = setaInicioY + espaco;
+                gfx_linha(setaInicioX, setaInicioY, setaInicioX, setaFimY);
+                gfx_linha(setaInicioX, setaFimY, setaInicioX - 5, setaFimY - 5);
+                gfx_linha(setaInicioX, setaFimY, setaInicioX + 5, setaFimY - 5);
             }
 
-            // Move o desenho para o próximo nó
-            y += nodeHeight + spacing;
+            //Move o desenho para o próximo No
+            posicaoY += alturaNo + espaco;
             topo = topo->proximo;
         }
     }
@@ -703,12 +707,40 @@ int main() {
 
 
         default:
-
+            if(menu!=-1){
+                printf("Informe um valor valido \n");
+                sleep(1);
+                system("clear");
+            }
             break;
         }
     }
 
     gfx_quit();
+
+    //Desalocando
+    //Fila
+    while (comecoFila != NULL) {
+    sairDaFila(&comecoFila);
+    }
+    //Pilha
+    while (comecoPilha != NULL) {
+        desempilhar(&comecoPilha);
+    }
+    //Simplismente Encadeada
+    while (comecoSimples != NULL) {
+        removerSimples(&comecoSimples, comecoSimples->dado);
+    }
+    //Circular
+    while (comecoCircular != NULL) {
+        removerCircular(&comecoCircular, comecoCircular->dado);
+    }
+    //Duplamente Encadeada
+    while (cabecaDuploEncadeada->proximo != NULL) {
+        removerDuplamente(&cabecaDuploEncadeada, cabecaDuploEncadeada->proximo->dado);
+    }
+    //No cabeça da Duplamente Encadeada
+    free(cabecaDuploEncadeada);
 
     return 0;
 }
