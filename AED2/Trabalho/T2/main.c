@@ -274,7 +274,7 @@ void desenharCircular(No *cabeca, No *busca) {
     gfx_set_color(255, 255, 255);
     
     if (cabeca == NULL) {
-        gfx_text(50, 100, "Lista Vazia");
+        gfx_text(50, 100, "Lista Circular Vazia");
         gfx_paint();
         return;
     }
@@ -396,7 +396,7 @@ void desenharDuplamenteEncadeada(NoDuplo *cabeca, NoDuplo *Busca) {
     gfx_text(x + 15, y + 10, "////");
 
     if (cabeca == NULL || cabeca->proximo == NULL) {
-        gfx_text(x + nodeWidth + spacing, y, "Lista Vazia");
+        gfx_text(x + nodeWidth + spacing, y, "Lista Dupla Vazia");
     } else {
         NoDuplo *atual = cabeca->proximo; //Comeca apos o no cabeca
 
