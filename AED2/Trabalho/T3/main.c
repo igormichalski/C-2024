@@ -5,7 +5,8 @@
 #include <string.h>
 
 //Macro para fornecer valores padrão para aux1 e aux2
-//Referencia: https://youtu.be/3iX9a_l9W9Y?si=dhelVlUtUGEpTm7Z
+//Referencia 1: https://youtu.be/3iX9a_l9W9Y?si=dhelVlUtUGEpTm7Z
+//Referencia 2: https://stackoverflow.com/questions/46725369/how-to-get-name-for-each-argument-in-variadic-macros
 #define GET_DESENHAR_MACRO(_1, _2, _3, _4, _5, _6, NAME, ...) NAME
 #define DESENHAR(...) GET_DESENHAR_MACRO(__VA_ARGS__, DESENHAR6, DESENHAR5, DESENHAR4)(__VA_ARGS__)
 
