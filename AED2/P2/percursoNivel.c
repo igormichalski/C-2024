@@ -11,31 +11,43 @@ registro noFila{
 }
 
 
-inserirFila()
+inserirFila(fila, no)
+	aux = fila
 	
+	alocar(novo)
+	novo->ptNoArv = no
+	novo->prox = NULL
+	
+	se (fila != NULL)
+		enquanto(aux->prox != NULL)
+			aux = aux->prox
+		aux->prox = novo
+	senao
+		fila = novo
 
-removerFila()
-
+removerFila(fila)
+	aux = fila
+	fila = fila->prox
+	desaloca(aux)
 
 inicializarFila(ptFila, ptraiz)
-	ptFila->ptNoArv = ptraiz
-	ptFila->prox = NULL
+	inserirFila(ptFila, ptraiz)
 
 imprimirNivel(ptraiz)
 	alocar(ptFila)
-	incializarFila(ptFila, ptraiz)
-	enquanto(ptFila->ptNoArv != NULL){
+	inicializarFila(ptFila, ptraiz)
+	enquanto(ptFila != NULL){
 		escreva(ptFila->ptNoArv->chave)
 		
 		se (ptFila->ptNoArv->esq != NULL){
-			inserir(ptFila->ptNoArv->esq);
+			inserir(ptFila, ptFila->ptNoArv->esq);
 		}
 		
 		se (ptFila->ptNoArv->dir != NULL){
-			inserir(ptFila->ptNoArv->dir);
+			inserir(ptFila, ptFila->ptNoArv->dir);
 		}
 		
-		remover(ptFila->ptNoArv);
+		remover(ptFila);
 	
 	}
 	
