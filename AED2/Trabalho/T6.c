@@ -4,9 +4,6 @@
 
 #define TAM 256 //Tamanho tabela ascii (0 a 255)
 
-//Não temos a implementeçao do windons para caracteress especiais,
-//não foi feito porque pelo que sei os codigos são testados somento no linux
-
 //Foi utilizado esse curso para aprender os algortimos e como armazenar em arquivo utilizando os bits corretamente
 //Referencia: https://www.youtube.com/watch?v=o8UPZ_KDWdU&list=PLqJK4Oyr5WShtxF1Ch3Vq4b1Dzzb-WxbP
 
