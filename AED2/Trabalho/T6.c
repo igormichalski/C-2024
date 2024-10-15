@@ -7,6 +7,10 @@
 //Foi utilizado esse curso para aprender os algortimos e como armazenar em arquivo utilizando os bits corretamente
 //Referencia: https://www.youtube.com/watch?v=o8UPZ_KDWdU&list=PLqJK4Oyr5WShtxF1Ch3Vq4b1Dzzb-WxbP
 
+//As devidas alterações foram realizadas para o bom funcionamento do codigo
+//Estrutura do arquivo compactado
+//Tam Raiz - Raiz - Quanti data - data
+
 typedef struct no {
     unsigned char caracter;
     int frequencia;
@@ -319,9 +323,6 @@ void compressFile(char *filename) {
     char inputFilename[256], outputFilename[256];
     FILE *outputFile;
     int treeSize, totalBits;
-
-    //Adicionar ".txt" ao nome do arquivo de entrada
-    snprintf(inputFilename, sizeof(inputFilename), "%s.txt", filename);
 
     data = readFile(inputFilename, &dataSize);
     if (!data) {
