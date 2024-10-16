@@ -151,9 +151,9 @@ void gerarDicionario(char **dicionario, No *raiz, char *caminho, int colunas) {
 
 int getSerializedTreeSize(No *node) {
     if (node->esq == NULL && node->dir == NULL) {
-        return 2; // '1' + character
+        return 2; //'1' + character
     } else {
-        return 1 + getSerializedTreeSize(node->esq) + getSerializedTreeSize(node->dir); // '0' + left + right
+        return 1 + getSerializedTreeSize(node->esq) + getSerializedTreeSize(node->dir); //'0' + left + right
     }
 }
 
@@ -312,6 +312,13 @@ unsigned char *readFile(const char *filename, size_t *size) {
     return buffer;
 }
 
+void removeExtension(char *filename) {
+    char *dot = strrchr(filename, '.');
+    if (dot != NULL) {
+        *dot = '\0'; //Remove a extensão, substituindo o ponto final por '\0'
+    }
+}
+
 void compressFile(char *filename) {
     unsigned char *data;
     size_t dataSize;
@@ -320,11 +327,10 @@ void compressFile(char *filename) {
     No *arvore;
     int colunas;
     char **dicionario, *codificado;
-    char inputFilename[256], outputFilename[256];
     FILE *outputFile;
     int treeSize, totalBits;
 
-    data = readFile(inputFilename, &dataSize);
+    data = readFile(filename, &dataSize);
     if (!data) {
         printf("Falha ao ler o arquivo de entrada.\n");
         return;
@@ -343,7 +349,11 @@ void compressFile(char *filename) {
 
     codificado = codificarData(dicionario, data, dataSize, &totalBits);
 
-    //Definir o nome do arquivo de saída com ".cmp"
+    //Remover a extensão original antes de adicionar ".cmp"
+    removeExtension(filename);
+
+    //define o nome do arquivo de saída com ".cmp"
+    char outputFilename[256];
     snprintf(outputFilename, sizeof(outputFilename), "%s.cmp", filename);
     outputFile = fopen(outputFilename, "wb");
     if (!outputFile) {
@@ -354,15 +364,11 @@ void compressFile(char *filename) {
     treeSize = getSerializedTreeSize(arvore);
 
     fwrite(&treeSize, sizeof(int), 1, outputFile);
-
     serializeTree(arvore, outputFile);
-
     fwrite(&totalBits, sizeof(int), 1, outputFile);
-
     writeCompressedData(codificado, outputFile);
 
     fclose(outputFile);
-
     free(data);
     free(codificado);
     for (int i = 0; i < TAM; i++) {
@@ -372,8 +378,6 @@ void compressFile(char *filename) {
 }
 
 void decompressFile(char *filename) {
-    char inputFilename[256];
-    char outputFilename[256];
     FILE *inputFile, *outputFile;
     int treeSize, totalBits;
     No *arvore;
@@ -382,21 +386,15 @@ void decompressFile(char *filename) {
     unsigned char *decodedData;
     size_t decodedDataSize;
 
-    //Adicionar ".cmp" ao nome do arquivo de entrada
-    snprintf(inputFilename, sizeof(inputFilename), "%s.cmp", filename);
-    //Definir o nome do arquivo de saída com ".dcmp"
-    snprintf(outputFilename, sizeof(outputFilename), "%s.dcmp", filename);
-
-    inputFile = fopen(inputFilename, "rb");
+    
+    inputFile = fopen(filename, "rb");
     if (!inputFile) {
         printf("Falha ao abrir o arquivo de entrada.\n");
         return;
     }
 
     fread(&treeSize, sizeof(int), 1, inputFile);
-
     arvore = deserializeTree(inputFile);
-
     fread(&totalBits, sizeof(int), 1, inputFile);
 
     compressedDataSize = ((totalBits + 7) / 8);
@@ -408,11 +406,16 @@ void decompressFile(char *filename) {
     }
 
     fread(compressedData, sizeof(unsigned char), compressedDataSize, inputFile);
-
     fclose(inputFile);
 
     decodedData = decodeData(compressedData, totalBits, arvore, &decodedDataSize);
 
+    //Remover a extensão original antes de adicionar ".dcmp"
+    removeExtension(filename);
+
+    //Define o nome do arquivo de saída com ".dcmp"
+    char outputFilename[256];
+    snprintf(outputFilename, sizeof(outputFilename), "%s.dcmp", filename);
     outputFile = fopen(outputFilename, "wb");
     if (!outputFile) {
         printf("Falha ao abrir o arquivo de saída.\n");
@@ -430,7 +433,7 @@ void decompressFile(char *filename) {
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Uso: %s [c|d] nome_do_arquivo_sem_extensao\n", argv[0]);
+        printf("Uso: %s [c|d] nome_do_arquivo + extensao\n", argv[0]);
         return 1;
     }
 
